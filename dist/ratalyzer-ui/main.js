@@ -422,7 +422,6 @@ var AppComponent = /** @class */ (function () {
             if (_this.count !== null) {
                 _this.signalDetectedDuringPoll = 1;
             }
-            _this.signalDetectedDuringPoll = 1;
             _this.count = count;
         });
         this.fileNameSubscription = this.socketService.fileName.subscribe(function (filename) {

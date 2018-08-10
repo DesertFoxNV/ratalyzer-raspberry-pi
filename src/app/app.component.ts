@@ -111,7 +111,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.countSubscription = this.socketService.count.subscribe(count => {
       if (this.count !== null) { this.signalDetectedDuringPoll = 1; }
-      this.signalDetectedDuringPoll = 1;
       this.count = count;
     });
 
