@@ -14,7 +14,7 @@
               [(ngModel)]="victim"></p-dropdown>
 
   <button pButton
-          [disabled]="testing && !victim || !connected"
+          [disabled]="testing && !victim.length || !connected"
           type="button"
           label="Start"
           class="ui-button ui-button-success mr-2"
@@ -52,6 +52,11 @@
        <b>Time Elapsed: {{ timeElapsed }} </b>
 
     </span>
+
+    <div>
+      <b> File Name: {{ fileName }} </b>
+    </div>
+
 
   </div>
 

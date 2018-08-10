@@ -34,13 +34,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
   options = ChartOptions;
 
+  signalDetectedDuringPoll = 0;
+
   testing = false;
 
   timeElapsed = '';
 
-  timeStarted: any;
+  timeStarted: moment.Moment;
 
-  victim: string;
+  victim = '';
 
   victimOptions: SelectItem[] = Array.apply(null, Array(10)).map((x, index) => {
     return { label: `Rat ${index + 1}`, value: `Rat${index + 1}` };
@@ -72,24 +74,21 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       ]
     };
-
-    this.generateRandomData();
   }
 
-  generateRandomData() {
-    setInterval(() => {
+  updateChartData() {
+      const newData = [this.signalDetectedDuringPoll].push(...this.data.data.splice(-1, 1));
+
       this.data = {
         labels: Array.apply(null, Array(60)).map(x => ''),
         datasets: [
           {
-            label: 'First Dataset',
-            data: Array.apply(null, Array(60)).map(x => {
-              return Math.round(Math.random());
-            })
+            data: newData
           }
         ]
       };
-    }, 1000);
+
+    this.signalDetectedDuringPoll = 0;
   }
 
   loadingAnimation() {
@@ -109,6 +108,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.countSubscription = this.socketService.count.subscribe(count => {
       this.count = count;
+
+      this.signalDetectedDuringPoll = 1;
     });
 
     this.fileNameSubscription = this.socketService.fileName.subscribe(filename => {
@@ -119,17 +120,26 @@ export class AppComponent implements OnInit, OnDestroy {
 
       this.testing = testing;
 
-      this.timeStarted = moment();
+      if (testing) {
+        this.timeStarted = moment();
 
-      this.interval = setInterval(() => {
-        this.timeElapsed = this.timeStarted.from(moment()).toString();
-      }, 1000);
+        this.interval = setInterval(() => {
+
+          this.timeElapsed = this.timeStarted.from(moment()).toString();
+          this.updateChartData();
+
+        }, 1000);
+      } else {
+        clearInterval(this.interval);
+        this.timeStarted = null;
+      }
+
+
     });
   }
 
   stop() {
-    clearInterval(this.interval);
-    this.timeStarted = null;
+    this.socketService.stop();
   }
 
 }

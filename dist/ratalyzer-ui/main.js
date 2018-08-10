@@ -310,7 +310,7 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"!loading\"\n     [@simpleFadeAnimation]=\"'in'\"\n     id=\"main\">\n\n  <h1> Ratalyzer </h1>\n\n  <h2 class=\"text-secondary\"> Extremely accurate wheel counter.</h2>\n\n  <p-dropdown class=\"mr-2\"\n              [disabled]=\"testing || !connected\"\n              [editable]=\"true\"\n              [options]=\"victimOptions\"\n              [placeholder]=\"'Select Victim'\"\n              [(ngModel)]=\"victim\"></p-dropdown>\n\n  <button pButton\n          [disabled]=\"testing && !victim || !connected\"\n          type=\"button\"\n          label=\"Start\"\n          class=\"ui-button ui-button-success mr-2\"\n          (click)=\"start()\"></button>\n\n  <button pButton\n          [disabled]=\"!testing || !connected\"\n          type=\"button\"\n          label=\"Stop\"\n          class=\"ui-button-raised ui-button-danger mb-3\"\n          (click)=\"stop()\"></button>\n\n  <p-chart *ngIf=\"timeStarted\"\n           type=\"line\"\n           [data]=\"data\"\n           [height]=\"225\"\n           [options]=\"options\"\n           #chart></p-chart>\n\n  <div *ngIf=\"!timeStarted\">\n    <img src=\"assets/images/rat.png\">\n  </div>\n\n  <div class=\"footer\"\n       *ngIf=\"timeStarted\">\n\n    <span>\n\n      <b>Total Count: {{ count }} </b>\n\n    </span>\n\n    <span class=\"float-right\">\n\n       <b>Time Elapsed: {{ timeElapsed }} </b>\n\n    </span>\n\n  </div>\n\n</div>\n\n<app-loading [loading]=\"loading\"></app-loading>\n\n\n"
+module.exports = "<div *ngIf=\"!loading\"\n     [@simpleFadeAnimation]=\"'in'\"\n     id=\"main\">\n\n  <h1> Ratalyzer </h1>\n\n  <h2 class=\"text-secondary\"> Extremely accurate wheel counter.</h2>\n\n  <p-dropdown class=\"mr-2\"\n              [disabled]=\"testing || !connected\"\n              [editable]=\"true\"\n              [options]=\"victimOptions\"\n              [placeholder]=\"'Select Victim'\"\n              [(ngModel)]=\"victim\"></p-dropdown>\n\n  <button pButton\n          [disabled]=\"testing && !victim.length || !connected\"\n          type=\"button\"\n          label=\"Start\"\n          class=\"ui-button ui-button-success mr-2\"\n          (click)=\"start()\"></button>\n\n  <button pButton\n          [disabled]=\"!testing || !connected\"\n          type=\"button\"\n          label=\"Stop\"\n          class=\"ui-button-raised ui-button-danger mb-3\"\n          (click)=\"stop()\"></button>\n\n  <p-chart *ngIf=\"timeStarted\"\n           type=\"line\"\n           [data]=\"data\"\n           [height]=\"225\"\n           [options]=\"options\"\n           #chart></p-chart>\n\n  <div *ngIf=\"!timeStarted\">\n    <img src=\"assets/images/rat.png\">\n  </div>\n\n  <div class=\"footer\"\n       *ngIf=\"timeStarted\">\n\n    <span>\n\n      <b>Total Count: {{ count }} </b>\n\n    </span>\n\n    <span class=\"float-right\">\n\n       <b>Time Elapsed: {{ timeElapsed }} </b>\n\n    </span>\n\n    <div>\n      <b> File Name: {{ fileName }} </b>\n    </div>\n\n\n  </div>\n\n</div>\n\n<app-loading [loading]=\"loading\"></app-loading>\n\n\n"
 
 /***/ }),
 
@@ -352,8 +352,10 @@ var AppComponent = /** @class */ (function () {
         this.fileName = '';
         this.loading = true;
         this.options = _helpers_chart_options__WEBPACK_IMPORTED_MODULE_3__["ChartOptions"];
+        this.signalDetectedDuringPoll = 0;
         this.testing = false;
         this.timeElapsed = '';
+        this.victim = '';
         this.victimOptions = Array.apply(null, Array(10)).map(function (x, index) {
             return { label: "Rat " + (index + 1), value: "Rat" + (index + 1) };
         });
@@ -387,23 +389,19 @@ var AppComponent = /** @class */ (function () {
                 }
             ]
         };
-        this.generateRandomData();
     };
-    AppComponent.prototype.generateRandomData = function () {
-        var _this = this;
-        setInterval(function () {
-            _this.data = {
-                labels: Array.apply(null, Array(60)).map(function (x) { return ''; }),
-                datasets: [
-                    {
-                        label: 'First Dataset',
-                        data: Array.apply(null, Array(60)).map(function (x) {
-                            return Math.round(Math.random());
-                        })
-                    }
-                ]
-            };
-        }, 1000);
+    AppComponent.prototype.updateChartData = function () {
+        var newData = (_a = [this.signalDetectedDuringPoll]).push.apply(_a, this.data.data.splice(-1, 1));
+        this.data = {
+            labels: Array.apply(null, Array(60)).map(function (x) { return ''; }),
+            datasets: [
+                {
+                    data: newData
+                }
+            ]
+        };
+        this.signalDetectedDuringPoll = 0;
+        var _a;
     };
     AppComponent.prototype.loadingAnimation = function () {
         var _this = this;
@@ -421,21 +419,28 @@ var AppComponent = /** @class */ (function () {
         });
         this.countSubscription = this.socketService.count.subscribe(function (count) {
             _this.count = count;
+            _this.signalDetectedDuringPoll = 1;
         });
         this.fileNameSubscription = this.socketService.fileName.subscribe(function (filename) {
             _this.fileName = filename;
         });
         this.testingSubscription = this.socketService.testing.subscribe(function (testing) {
             _this.testing = testing;
-            _this.timeStarted = moment__WEBPACK_IMPORTED_MODULE_2__();
-            _this.interval = setInterval(function () {
-                _this.timeElapsed = _this.timeStarted.from(moment__WEBPACK_IMPORTED_MODULE_2__()).toString();
-            }, 1000);
+            if (testing) {
+                _this.timeStarted = moment__WEBPACK_IMPORTED_MODULE_2__();
+                _this.interval = setInterval(function () {
+                    _this.timeElapsed = _this.timeStarted.from(moment__WEBPACK_IMPORTED_MODULE_2__()).toString();
+                    _this.updateChartData();
+                }, 1000);
+            }
+            else {
+                clearInterval(_this.interval);
+                _this.timeStarted = null;
+            }
         });
     };
     AppComponent.prototype.stop = function () {
-        clearInterval(this.interval);
-        this.timeStarted = null;
+        this.socketService.stop();
     };
     AppComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
