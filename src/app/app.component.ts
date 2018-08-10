@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
   animations: [Animations.fadeIn]
 })
 export class AppComponent implements OnInit, OnDestroy {
-  count = 0;
+  count = null;
 
   connected = false;
 
@@ -66,7 +66,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   createChart() {
     this.data = {
-      labels: Array.apply(null, Array(60)).map(x => ''),
+      labels: Array.apply(null, Array(60)).map(x => ' '),
       datasets: [
         {
           label: 'First Dataset',
@@ -77,10 +77,13 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   updateChartData() {
-      const newData = [this.signalDetectedDuringPoll].push(...this.data.datasets[0].data.splice(-1, 1));
+      this.data.datasets[0].data.pop();
+
+      const newData = [];
+      newData.push(this.signalDetectedDuringPoll, ...this.data.datasets[0].data);
 
       this.data = {
-        labels: Array.apply(null, Array(60)).map(x => ''),
+        labels: Array.apply(null, Array(30)).map(x => ''),
         datasets: [
           {
             data: newData
@@ -107,9 +110,9 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
     this.countSubscription = this.socketService.count.subscribe(count => {
-      this.count = count;
-
+      if (this.count !== null) { this.signalDetectedDuringPoll = 1; }
       this.signalDetectedDuringPoll = 1;
+      this.count = count;
     });
 
     this.fileNameSubscription = this.socketService.fileName.subscribe(filename => {
@@ -128,8 +131,9 @@ export class AppComponent implements OnInit, OnDestroy {
           this.timeElapsed = this.timeStarted.from(moment()).toString();
           this.updateChartData();
 
-        }, 1000);
+        }, 100);
       } else {
+        this.count = null;
         clearInterval(this.interval);
         this.timeStarted = null;
       }

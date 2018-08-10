@@ -14,7 +14,7 @@
               [(ngModel)]="victim"></p-dropdown>
 
   <button pButton
-          [disabled]="testing && !victim.length || !connected"
+          [disabled]="testing || !victim.length || !connected"
           type="button"
           label="Start"
           class="ui-button ui-button-success mr-2"

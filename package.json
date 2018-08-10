@@ -12,7 +12,8 @@
     "test": "ng test"
   },
   "dependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "pigpio": "^0.7.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.7.0",
