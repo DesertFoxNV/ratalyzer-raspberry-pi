@@ -737,7 +737,7 @@ var SocketService = /** @class */ (function () {
     };
     SocketService.prototype.socketConfiguration = function () {
         var _this = this;
-        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_2__('localhost:4200', {
+        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_2__('localhost:3000', {
             reconnection: true,
             reconnectionDelay: 500
         });
