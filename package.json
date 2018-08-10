@@ -7,7 +7,7 @@
     "e2e": "ng e2e",
     "lint": "ng lint",
     "ng": "ng",
-    "serve": "node src/server.js",
+    "serve": "node server.js",
     "start": "ng serve",
     "test": "ng test"
   },
