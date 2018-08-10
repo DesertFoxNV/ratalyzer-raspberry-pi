@@ -535,7 +535,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"loading\"\n     class=\"bg-transparent\"\n     [@simpleFadeAnimation]=\"'in'\">\n\n  <!--Image By Maskman626 https://www.deviantart.com/maskman626/art/Energy-717233217-->\n  <img class=\"img-center\"\n       src=\"/assets/images/rat.gif\">\n\n</div>\n"
+module.exports = "<div *ngIf=\"loading\"\n     class=\"bg-transparent overflow-hidden\"\n     [@simpleFadeAnimation]=\"'in'\">\n\n  <!--Image By Maskman626 https://www.deviantart.com/maskman626/art/Energy-717233217-->\n  <img class=\"img-center\"\n       src=\"/assets/images/rat.gif\">\n\n</div>\n"
 
 /***/ }),
 
