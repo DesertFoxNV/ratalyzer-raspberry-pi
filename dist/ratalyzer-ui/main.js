@@ -391,7 +391,7 @@ var AppComponent = /** @class */ (function () {
         };
     };
     AppComponent.prototype.updateChartData = function () {
-        var newData = (_a = [this.signalDetectedDuringPoll]).push.apply(_a, this.data.data.splice(-1, 1));
+        var newData = (_a = [this.signalDetectedDuringPoll]).push.apply(_a, this.data.datasets[0].splice(-1, 1));
         this.data = {
             labels: Array.apply(null, Array(60)).map(function (x) { return ''; }),
             datasets: [

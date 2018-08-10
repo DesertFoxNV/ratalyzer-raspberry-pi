@@ -77,7 +77,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   updateChartData() {
-      const newData = [this.signalDetectedDuringPoll].push(...this.data.data.splice(-1, 1));
+      const newData = [this.signalDetectedDuringPoll].push(...this.data.datasets[0].splice(-1, 1));
 
       this.data = {
         labels: Array.apply(null, Array(60)).map(x => ''),
