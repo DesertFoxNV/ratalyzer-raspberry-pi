@@ -39,7 +39,7 @@ export class SocketService
 
   socketConfiguration(): void
   {
-    this.socket = io('localhost:4200',
+    this.socket = io('localhost:3000',
       {
         reconnection: true,
         reconnectionDelay: 500
