@@ -39,7 +39,7 @@ export class SocketService
 
   socketConfiguration(): void
   {
-    this.socket = io('http://192.168.1.152:4200',
+    this.socket = io('localhost:4200',
       {
         reconnection: true,
         reconnectionDelay: 500
@@ -56,19 +56,13 @@ export class SocketService
       this.connected.next(this._connected);
     });
 
-    this.socket.on('response-testing', data =>
-    {
-      this._testing = data;
-      console.log(data);
-    });
-
     this.socket.on('started', data =>
     {
       this._testing = true;
       this.testing.next(this._testing);
       this._count = data.count;
       this.count.next(this._count);
-      this._fileName = data._fileName;
+      this._fileName = data.fileName;
       this.fileName.next(this._fileName);
     });
 
@@ -78,7 +72,7 @@ export class SocketService
       this.count.next(this._count);
     });
 
-    this.socket.on('stopped', data =>
+    this.socket.on('stopped', () =>
     {
       this._testing = false;
       this.testing.next(false);

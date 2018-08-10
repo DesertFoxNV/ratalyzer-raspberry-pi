@@ -747,7 +747,7 @@ var SocketService = /** @class */ (function () {
     };
     SocketService.prototype.socketConfiguration = function () {
         var _this = this;
-        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_2__('http://192.168.1.152:4200', {
+        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_2__('localhost:4200', {
             reconnection: true,
             reconnectionDelay: 500
         });
@@ -759,23 +759,19 @@ var SocketService = /** @class */ (function () {
             _this._connected = false;
             _this.connected.next(_this._connected);
         });
-        this.socket.on('response-testing', function (data) {
-            _this._testing = data;
-            console.log(data);
-        });
         this.socket.on('started', function (data) {
             _this._testing = true;
             _this.testing.next(_this._testing);
             _this._count = data.count;
             _this.count.next(_this._count);
-            _this._fileName = data._fileName;
+            _this._fileName = data.fileName;
             _this.fileName.next(_this._fileName);
         });
         this.socket.on('update', function (data) {
             _this._count = data;
             _this.count.next(_this._count);
         });
-        this.socket.on('stopped', function (data) {
+        this.socket.on('stopped', function () {
             _this._testing = false;
             _this.testing.next(false);
         });
