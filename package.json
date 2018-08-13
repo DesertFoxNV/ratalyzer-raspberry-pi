@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "ng build",
+    "build": "tsc server.ts && ng build",
     "e2e": "ng e2e",
     "lint": "ng lint",
     "ng": "ng",

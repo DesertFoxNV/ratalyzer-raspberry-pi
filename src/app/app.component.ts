@@ -42,9 +42,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   timeStarted: moment.Moment;
 
-  victim = '';
+  ratName = '';
 
-  victimOptions: SelectItem[] = Array.apply(null, Array(10)).map((x, index) => {
+  nameOptions: SelectItem[] = Array.apply(null, Array(10)).map((x, index) => {
     return { label: `Rat ${index + 1}`, value: `Rat${index + 1}` };
   });
 
@@ -69,7 +69,7 @@ export class AppComponent implements OnInit, OnDestroy {
       labels: Array.apply(null, Array(60)).map(x => ' '),
       datasets: [
         {
-          label: 'First Dataset',
+          label: 'Data',
           data: Array.apply(null, Array(60)).map(x => 0)
         }
       ]
@@ -101,7 +101,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   start() {
-    this.socketService.start(this.victim);
+    this.socketService.start(this.ratName);
   }
 
   startSubscriptions() {

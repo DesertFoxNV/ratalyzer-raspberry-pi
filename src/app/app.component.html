@@ -9,12 +9,12 @@
   <p-dropdown class="mr-2"
               [disabled]="testing || !connected"
               [editable]="true"
-              [options]="victimOptions"
+              [options]="nameOptions"
               [placeholder]="'Select Victim'"
-              [(ngModel)]="victim"></p-dropdown>
+              [(ngModel)]="ratName"></p-dropdown>
 
   <button pButton
-          [disabled]="testing || !victim.length || !connected"
+          [disabled]="testing || !ratName.length || !connected"
           type="button"
           label="Start"
           class="ui-button ui-button-success mr-2"
