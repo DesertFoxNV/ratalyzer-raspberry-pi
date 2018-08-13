@@ -310,7 +310,7 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"!loading\"\n     [@simpleFadeAnimation]=\"'in'\"\n     id=\"main\">\n\n  <h1> Ratalyzer </h1>\n\n  <h2 class=\"text-secondary\"> Extremely accurate wheel counter.</h2>\n\n  <p-dropdown class=\"mr-2\"\n              [disabled]=\"testing || !connected\"\n              [editable]=\"true\"\n              [options]=\"victimOptions\"\n              [placeholder]=\"'Select Victim'\"\n              [(ngModel)]=\"victim\"></p-dropdown>\n\n  <button pButton\n          [disabled]=\"testing || !victim.length || !connected\"\n          type=\"button\"\n          label=\"Start\"\n          class=\"ui-button ui-button-success mr-2\"\n          (click)=\"start()\"></button>\n\n  <button pButton\n          [disabled]=\"!testing || !connected\"\n          type=\"button\"\n          label=\"Stop\"\n          class=\"ui-button-raised ui-button-danger mb-3\"\n          (click)=\"stop()\"></button>\n\n  <p-chart *ngIf=\"timeStarted\"\n           type=\"line\"\n           [data]=\"data\"\n           [height]=\"225\"\n           [options]=\"options\"\n           #chart></p-chart>\n\n  <div *ngIf=\"!timeStarted\">\n    <img src=\"assets/images/rat.png\">\n  </div>\n\n  <div class=\"footer\"\n       *ngIf=\"timeStarted\">\n\n    <span>\n\n      <b>Total Count: {{ count }} </b>\n\n    </span>\n\n    <span class=\"float-right\">\n\n       <b>Time Elapsed: {{ timeElapsed }} </b>\n\n    </span>\n\n    <div>\n      <b> File Name: {{ fileName }} </b>\n    </div>\n\n\n  </div>\n\n</div>\n\n<app-loading [loading]=\"loading\"></app-loading>\n\n\n"
+module.exports = "<div *ngIf=\"!loading\"\n     [@simpleFadeAnimation]=\"'in'\"\n     id=\"main\">\n\n  <h1> Ratalyzer </h1>\n\n  <h2 class=\"text-secondary\"> Extremely accurate wheel counter.</h2>\n\n  <p-dropdown class=\"mr-2\"\n              [disabled]=\"testing || !connected\"\n              [editable]=\"true\"\n              [options]=\"nameOptions\"\n              [placeholder]=\"'Select Name'\"\n              [(ngModel)]=\"ratName\"></p-dropdown>\n\n  <button pButton\n          [disabled]=\"testing || !ratName.length || !connected\"\n          type=\"button\"\n          label=\"Start\"\n          class=\"ui-button ui-button-success mr-2\"\n          (click)=\"start()\"></button>\n\n  <button pButton\n          [disabled]=\"!testing || !connected\"\n          type=\"button\"\n          label=\"Stop\"\n          class=\"ui-button-raised ui-button-danger mb-3\"\n          (click)=\"stop()\"></button>\n\n  <p-chart *ngIf=\"timeStarted\"\n           type=\"line\"\n           [data]=\"data\"\n           [height]=\"225\"\n           [options]=\"options\"\n           #chart></p-chart>\n\n  <div *ngIf=\"!timeStarted\">\n    <img src=\"assets/images/rat.png\">\n  </div>\n\n  <div class=\"footer\"\n       *ngIf=\"timeStarted\">\n\n    <span>\n\n      <b>Total Count: {{ count }} </b>\n\n    </span>\n\n    <span class=\"float-right\">\n\n       <b>Time Elapsed: {{ timeElapsed }} </b>\n\n    </span>\n\n    <div>\n      <b> File Name: {{ fileName }} </b>\n    </div>\n\n  </div>\n\n</div>\n\n<app-loading [loading]=\"loading\"></app-loading>\n\n\n"
 
 /***/ }),
 
@@ -347,18 +347,18 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var AppComponent = /** @class */ (function () {
     function AppComponent(socketService) {
         this.socketService = socketService;
-        this.count = null;
         this.connected = false;
+        this.count = null;
         this.fileName = '';
         this.loading = true;
+        this.nameOptions = Array.apply(null, Array(10)).map(function (x, index) {
+            return { label: "Rat " + (index + 1), value: "Rat" + (index + 1) };
+        });
         this.options = _helpers_chart_options__WEBPACK_IMPORTED_MODULE_3__["ChartOptions"];
+        this.ratName = '';
         this.signalDetectedDuringPoll = 0;
         this.testing = false;
         this.timeElapsed = '';
-        this.victim = '';
-        this.victimOptions = Array.apply(null, Array(10)).map(function (x, index) {
-            return { label: "Rat " + (index + 1), value: "Rat" + (index + 1) };
-        });
     }
     AppComponent.prototype.ngOnInit = function () {
         this.startSubscriptions();
@@ -384,7 +384,7 @@ var AppComponent = /** @class */ (function () {
             labels: Array.apply(null, Array(60)).map(function (x) { return ' '; }),
             datasets: [
                 {
-                    label: 'First Dataset',
+                    label: 'Data',
                     data: Array.apply(null, Array(60)).map(function (x) { return 0; })
                 }
             ]
@@ -411,7 +411,7 @@ var AppComponent = /** @class */ (function () {
         }, 3000);
     };
     AppComponent.prototype.start = function () {
-        this.socketService.start(this.victim);
+        this.socketService.start(this.ratName);
     };
     AppComponent.prototype.startSubscriptions = function () {
         var _this = this;
