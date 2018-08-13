@@ -7,14 +7,17 @@ import { LoadingComponent } from './loading/loading.component';
 import { FormsModule } from '@angular/forms';
 import { ChartOptions } from '../helpers/chart-options';
 
-class SocketServiceStub {
+class SocketServiceStub
+{
 }
 
-describe('AppComponent', () => {
+describe('AppComponent', () =>
+{
   let component: AppComponent,
     fixture: ComponentFixture<AppComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async(() =>
+  {
     TestBed.configureTestingModule({
       imports: [
         ChartModule,
@@ -23,35 +26,40 @@ describe('AppComponent', () => {
       ],
       declarations: [
         AppComponent,
-        LoadingComponent,
+        LoadingComponent
       ],
       providers: [
-        { provide: SocketService, useClass: SocketServiceStub },
+        { provide: SocketService, useClass: SocketServiceStub }
       ]
     }).compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(() =>
+  {
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
   });
 
-  it('should create the app', async(() => {
+  it('should create the app', async(() =>
+  {
     expect(component).toBeTruthy();
   }));
 
-  it('should have the required functions', () => {
+  it('should have the required functions', () =>
+  {
     const methods = [
       'ngOnInit', 'ngOnDestroy', 'createChart', 'updateChartData', 'loadingAnimation', 'start', 'startSubscriptions',
       'stop'
     ];
 
-    for (const method of methods) {
+    for (const method of methods)
+    {
       expect(typeof component[method]).toBe('function');
     }
   });
 
-  it('starting properties should match expected values', () => {
+  it('starting properties should match expected values', () =>
+  {
     expect(component.count).toBe(null);
     expect(component.connected).toBe(false);
     expect(component.connectedSubscription).toBe(undefined);
@@ -69,8 +77,9 @@ describe('AppComponent', () => {
     expect(component.timeStarted).toBe(undefined);
     expect(component.ratName).toBe('');
 
-    for (let i = 0; i < 9; i++) {
-      expect(component.nameOptions[i]).toEqual({label: `Rat ${i + 1}`, value: `Rat${i + 1}`});
+    for (let i = 0; i < 9; i++)
+    {
+      expect(component.nameOptions[i]).toEqual({ label: `Rat ${i + 1}`, value: `Rat${i + 1}` });
     }
 
   });

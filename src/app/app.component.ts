@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Animations } from '../assets/animations/animations';
 import { SelectItem } from 'primeng/api';
 import * as moment from 'moment';
@@ -11,60 +11,78 @@ import { Subscription } from 'rxjs';
   templateUrl: './app.component.html',
   animations: [Animations.fadeIn]
 })
-export class AppComponent implements OnInit, OnDestroy {
-  count = null;
-
+export class AppComponent implements OnInit, OnDestroy
+{
   connected = false;
 
   connectedSubscription: Subscription;
 
+  count = null;
+
   countSubscription: Subscription;
 
-  fileNameSubscription: Subscription;
-
-  testingSubscription: Subscription;
+  data: any;
 
   fileName = '';
 
-  data: any;
+  fileNameSubscription: Subscription;
 
   interval;
 
   loading = true;
 
+  nameOptions: SelectItem[] = Array.apply(null, Array(10)).map((x, index) =>
+  {
+    return { label: `Rat ${index + 1}`, value: `Rat${index + 1}` };
+  });
+
   options = ChartOptions;
+
+  ratName = '';
 
   signalDetectedDuringPoll = 0;
 
   testing = false;
 
+  testingSubscription: Subscription;
+
   timeElapsed = '';
 
   timeStarted: moment.Moment;
 
-  ratName = '';
-
-  nameOptions: SelectItem[] = Array.apply(null, Array(10)).map((x, index) => {
-    return { label: `Rat ${index + 1}`, value: `Rat${index + 1}` };
-  });
-
-  constructor(private socketService: SocketService) {
+  constructor(private socketService: SocketService)
+  {
   }
 
-  ngOnInit() {
+  ngOnInit()
+  {
     this.startSubscriptions();
     this.createChart();
     this.loadingAnimation();
   }
 
-  ngOnDestroy() {
-    if (this.connectedSubscription) { this.connectedSubscription.unsubscribe(); }
-    if (this.countSubscription) { this.countSubscription.unsubscribe(); }
-    if (this.fileNameSubscription) { this.fileNameSubscription.unsubscribe(); }
-    if (this.testingSubscription) { this.testingSubscription.unsubscribe(); }
+  ngOnDestroy()
+  {
+    if (this.connectedSubscription)
+    {
+      this.connectedSubscription.unsubscribe();
+    }
+    if (this.countSubscription)
+    {
+      this.countSubscription.unsubscribe();
+    }
+    if (this.fileNameSubscription)
+    {
+      this.fileNameSubscription.unsubscribe();
+    }
+    if (this.testingSubscription)
+    {
+      this.testingSubscription.unsubscribe();
+    }
   }
 
-  createChart() {
+  createChart()
+  {
     this.data = {
       labels: Array.apply(null, Array(60)).map(x => ' '),
       datasets: [
@@ -76,62 +94,77 @@ export class AppComponent implements OnInit, OnDestroy {
     };
   }
 
-  updateChartData() {
-      this.data.datasets[0].data.pop();
+  updateChartData()
+  {
+    this.data.datasets[0].data.pop();
 
-      const newData = [];
-      newData.push(this.signalDetectedDuringPoll, ...this.data.datasets[0].data);
+    const newData = [];
+    newData.push(this.signalDetectedDuringPoll, ...this.data.datasets[0].data);
 
-      this.data = {
-        labels: Array.apply(null, Array(30)).map(x => ''),
-        datasets: [
-          {
-            data: newData
-          }
-        ]
-      };
+    this.data = {
+      labels: Array.apply(null, Array(30)).map(x => ''),
+      datasets: [
+        {
+          data: newData
+        }
+      ]
+    };
 
     this.signalDetectedDuringPoll = 0;
   }
 
-  loadingAnimation() {
-    setTimeout(() => {
+  loadingAnimation()
+  {
+    setTimeout(() =>
+    {
       this.loading = false;
     }, 3000);
   }
 
-  start() {
+  start()
+  {
     this.socketService.start(this.ratName);
   }
 
-  startSubscriptions() {
-    this.connectedSubscription = this.socketService.connected.subscribe(connected => {
+  startSubscriptions()
+  {
+    this.connectedSubscription = this.socketService.connected.subscribe(connected =>
+    {
       this.connected = connected;
     });
 
-    this.countSubscription = this.socketService.count.subscribe(count => {
-      if (this.count !== null) { this.signalDetectedDuringPoll = 1; }
+    this.countSubscription = this.socketService.count.subscribe(count =>
+    {
+      if (this.count !== null)
+      {
+        this.signalDetectedDuringPoll = 1;
+      }
       this.count = count;
     });
 
-    this.fileNameSubscription = this.socketService.fileName.subscribe(filename => {
+    this.fileNameSubscription = this.socketService.fileName.subscribe(filename =>
+    {
       this.fileName = filename;
     });
 
-    this.testingSubscription = this.socketService.testing.subscribe(testing => {
+    this.testingSubscription = this.socketService.testing.subscribe(testing =>
+    {
 
       this.testing = testing;
 
-      if (testing) {
+      if (testing)
+      {
         this.timeStarted = moment();
 
-        this.interval = setInterval(() => {
+        this.interval = setInterval(() =>
+        {
 
           this.timeElapsed = this.timeStarted.from(moment()).toString();
           this.updateChartData();
 
         }, 100);
-      } else {
+      } else
+      {
         this.count = null;
         clearInterval(this.interval);
         this.timeStarted = null;
@@ -141,7 +174,8 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  stop() {
+  stop()
+  {
     this.socketService.stop();
   }
 

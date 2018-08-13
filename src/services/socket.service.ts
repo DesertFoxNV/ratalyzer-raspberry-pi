@@ -45,7 +45,8 @@ export class SocketService
         reconnectionDelay: 500
       });
 
-    this.socket.on('connected', () => {
+    this.socket.on('connected', () =>
+    {
       this._connected = true;
       this.connected.next(this._connected);
     });
